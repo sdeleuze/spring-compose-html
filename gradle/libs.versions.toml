@@ -1,0 +1,22 @@
+[versions]
+kotlin = "2.4.21"
+spring-boot = "4.2.0-RC1"
+spring-framework = "7.1.0-RC1"
+compose-runtime = "1.12.0"
+compose-html-eap = "0.0.2+dev3"
+kotlinx-browser-common-subset = "0.0.1+dev2"
+
+[libraries]
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-framework-bom = { module = "org.springframework:spring-framework-bom", version.ref = "spring-framework" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-runtime" }
+compose-html-core = { module = "org.jetbrains.compose.html.eap:html-core-eap", version.ref = "compose-html-eap" }
+kotlinx-browser-common-subset = { module = "org.jetbrains.compose.html:kotlinx-browser-common-subset", version.ref = "kotlinx-browser-common-subset" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
