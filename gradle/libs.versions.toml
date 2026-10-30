@@ -3,7 +3,7 @@ kotlin = "2.4.21"
 spring-boot = "4.2.0-RC1"
 spring-framework = "7.1.0-RC1"
 compose-runtime = "1.12.0"
-compose-html-eap = "0.0.2+dev3"
+compose-html-eap = "0.0.2+dev7"
 kotlinx-browser-common-subset = "0.0.1+dev2"
 
 [libraries]
