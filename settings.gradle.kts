@@ -3,6 +3,11 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         maven("https://repo.spring.io/milestone")
+        maven("https://packages.jetbrains.team/maven/p/cmp/dev") {
+            content {
+                includeGroupByRegex("org\\.jetbrains\\.compose\\.html.*")
+            }
+        }
     }
 }
 

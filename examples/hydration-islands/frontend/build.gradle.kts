@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose.html.lowering) // optional, lower static parts at compile time for faster rendering
 }
 
 description = "Browser application hydrating the hydration islands rendered by the server"

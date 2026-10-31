@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose.html.lowering) // optional, lower static parts at compile time for faster rendering
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.spring.boot)
 }
