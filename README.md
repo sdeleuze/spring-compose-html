@@ -52,7 +52,7 @@ class TodoController(private val repository: TodoRepository) {
 
 Within `composeDocument`, `HydrationRoot` renders an island and its public initial state. The
 browser hydrates the islands with `hydrateRoot`, from a Kotlin/Wasm (or Kotlin/JS) bundle
-sharing the same composables. See the [hydration islands example](#example).
+sharing the same composables. See the [hydration islands example](#examples).
 
 ### Details
 
@@ -68,7 +68,26 @@ sharing the same composables. See the [hydration islands example](#example).
   during server-side composition never leaks into the global snapshot or other requests.
 - Spring MVC views stream the output to the response writer.
 
-## Example
+## Examples
+
+### TODO application
+
+[`examples/ssr-todo`](examples/ssr-todo) is a typical TODO application, fully rendered on the server
+without any JavaScript: add, edit, complete and delete todos, mark them all as completed, filter the
+active or completed ones and clear the completed ones.
+
+Every action is a plain HTML form posted to a `@Controller` that redirects back to the page it was
+submitted from (Post/Redirect/Get). Clicking a todo renders the same page with this todo in edit
+mode (`/?edit=1`), saving it empty deletes it. The todos are stored in an in-memory H2 database
+with Spring Data JDBC.
+
+```shell
+./gradlew :examples:ssr-todo:bootRun
+```
+
+Then open <http://localhost:8080/>.
+
+### Hydration islands
 
 [`examples/hydration-islands`](examples/hydration-islands) is the Spring version of the
 [Compose HTML EAP hydration islands example](https://github.com/JetBrains/compose-multiplatform/tree/master/html/eap/examples/hydration-islands):
