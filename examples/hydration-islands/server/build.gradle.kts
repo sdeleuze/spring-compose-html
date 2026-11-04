@@ -47,13 +47,6 @@ tasks.processResources {
     }
 }
 
-tasks.bootJar {
-    // org.jetbrains.compose.runtime:runtime-desktop is an empty stub with the same file name as
-    // androidx.compose.runtime:runtime-desktop: keep only the latter in the executable jar
-    val stub = "org.jetbrains.compose.runtime${File.separator}runtime-desktop${File.separator}"
-    setClasspath(classpath!!.filter { !it.path.contains(stub) })
-}
-
 tasks.test {
     useJUnitPlatform()
 }

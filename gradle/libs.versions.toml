@@ -10,7 +10,7 @@ kotlinx-browser-common-subset = "0.0.1+dev2"
 spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
 spring-framework-bom = { module = "org.springframework:spring-framework-bom", version.ref = "spring-framework" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-runtime" }
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose-runtime" }
 compose-html-core = { module = "org.jetbrains.compose.html.eap:html-core-eap", version.ref = "compose-html-eap" }
 kotlinx-browser-common-subset = { module = "org.jetbrains.compose.html:kotlinx-browser-common-subset", version.ref = "kotlinx-browser-common-subset" }
 

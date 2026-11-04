@@ -119,8 +119,4 @@ Requires JDK 25 to build the example (the library itself targets Java 17), which
 
 ## Notes
 
-- This is a prototype built on EAP artifacts (`org.jetbrains.compose.html.eap:*:0.0.2+dev3`)
-  with Kotlin 2.4, Spring Boot 4.2 and Spring Framework 7.1.
-- `org.jetbrains.compose.runtime:runtime-desktop` is an empty stub jar with the same file name
-  as `androidx.compose.runtime:runtime-desktop`. Spring Boot executable jars need to filter it
-  out, see the `bootJar` configuration of the example server.
+- This is a prototype built on Compose HTML EAP artifacts with Kotlin 2.4, Spring Boot 4.2 and Spring Framework 7.1.
