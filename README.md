@@ -70,6 +70,25 @@ sharing the same composables. See the [hydration islands example](#examples).
 
 ## Examples
 
+### Counter
+
+[`examples/hydration-counter`](examples/hydration-counter) is the most basic hydration example: a page with
+a counter rendered on the server, and a button incrementing it once the browser has hydrated it.
+
+- `shared`: Kotlin Multiplatform library (JVM and Wasm) with the `Counter` composable, used by both
+  the server and the frontend.
+- `frontend`: Kotlin/Wasm browser application whose entry point hydrates the counter, packaged as
+  the `app.js` bundle.
+- `server`: Spring Boot application rendering the page, with the counter wrapped in a
+  `HydrationRoot` carrying its initial count, and serving the frontend bundle as static resources.
+
+```shell
+./gradlew :examples:hydration-counter:server:bootRun
+```
+
+Then open <http://localhost:8080/> or, for example, <http://localhost:8080/?count=5> to start
+from another count.
+
 ### TODO application
 
 [`examples/ssr-todo`](examples/ssr-todo) is a typical TODO application, fully rendered on the server

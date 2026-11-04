@@ -27,6 +27,9 @@ dependencyResolutionManagement {
 rootProject.name = "spring-compose-html-build"
 
 include("spring-compose-html")
+include("examples:hydration-counter:shared")
+include("examples:hydration-counter:frontend")
+include("examples:hydration-counter:server")
 include("examples:hydration-islands:shared")
 include("examples:hydration-islands:frontend")
 include("examples:hydration-islands:server")
