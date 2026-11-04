@@ -50,7 +50,7 @@ class CounterController {
                 HydrationRoot(count ?: 0, Int::toString, hydrationId = COUNTER_ID) {
                     Counter(it)
                 }
-                Script(attrs = { type(ScriptType.Module); src("/app.js") })
+                Script(attrs = { type(ScriptType.Module); src("/counter.js") })
             }
         }
     }

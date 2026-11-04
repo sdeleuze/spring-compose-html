@@ -78,7 +78,7 @@ a counter rendered on the server, and a button incrementing it once the browser 
 - `shared`: Kotlin Multiplatform library (JVM and Wasm) with the `Counter` composable, used by both
   the server and the frontend.
 - `frontend`: Kotlin/Wasm browser application whose entry point hydrates the counter, packaged as
-  the `app.js` bundle.
+  the `counter.js` bundle.
 - `server`: Spring Boot application rendering the page, with the counter wrapped in a
   `HydrationRoot` carrying its initial count, and serving the frontend bundle as static resources.
 
@@ -126,7 +126,7 @@ from their hydration ID prefix.
 - `shared`: Kotlin Multiplatform library (JVM and Wasm) with the island composables and styles,
   used by both the server and the frontend so the browser hydrates exactly what the server rendered.
 - `frontend`: Kotlin/Wasm browser application whose entry point hydrates the islands of any
-  page, packaged as the `app.js` bundle.
+  page, packaged as the `islands.js` bundle.
 - `server`: Spring Boot application rendering the pages with `@Controller`s and serving the
   frontend bundle as static resources. Pages and bundle are gzip-compressed (`server.compression` in
   `application.properties`). The initial state of the islands comes from typed request parameters.

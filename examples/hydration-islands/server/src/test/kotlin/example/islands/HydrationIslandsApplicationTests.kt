@@ -44,7 +44,7 @@ class HydrationIslandsApplicationTests(@Autowired private val mockMvc: MockMvc) 
             .contains("<form action=\"/cart\" method=\"post\">")
             .contains("<input type=\"hidden\" name=\"${OrderFields.GLAZE}\" value=\"CLAY\">")
             .contains("<a href=\"/cart\" class=\"cartLink\">CART (0)</a>")
-            .contains("<script type=\"module\" src=\"/app.js\"></script>")
+            .contains("<script type=\"module\" src=\"/islands.js\"></script>")
     }
 
     @Test
@@ -65,7 +65,7 @@ class HydrationIslandsApplicationTests(@Autowired private val mockMvc: MockMvc) 
             .startsWith("<!doctype html><html lang=\"en\">")
             .contains("Your cart is empty.")
             .doesNotContain("data-compose-hydration-root")
-            .doesNotContain("/app.js")
+            .doesNotContain("/islands.js")
     }
 
     @Test
@@ -83,7 +83,7 @@ class HydrationIslandsApplicationTests(@Autowired private val mockMvc: MockMvc) 
             .contains(state(IslandIds.cartLine(1), "1:3"))
             .contains("No engraving")
             .contains(state(IslandIds.cartLine(2), "2:$MAX_QUANTITY"))
-            .contains("<script type=\"module\" src=\"/app.js\"></script>")
+            .contains("<script type=\"module\" src=\"/islands.js\"></script>")
             .contains("<dd>€${(3 + MAX_QUANTITY) * MUG_PRICE}</dd>")
             .contains("<dd>Free</dd>")
         assertThat(render("/", session)).contains("CART (${3 + MAX_QUANTITY})")
@@ -144,7 +144,7 @@ class HydrationIslandsApplicationTests(@Autowired private val mockMvc: MockMvc) 
 
     @Test
     fun browserBundleIsServed() {
-        this.mockMvc.get("/app.js").andExpect {
+        this.mockMvc.get("/islands.js").andExpect {
             status { isOk() }
         }
     }

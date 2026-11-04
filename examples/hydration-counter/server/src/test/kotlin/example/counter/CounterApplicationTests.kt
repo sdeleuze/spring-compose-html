@@ -35,7 +35,7 @@ class CounterApplicationTests(@Autowired private val mockMvc: MockMvc) {
             .startsWith("<!doctype html><html lang=\"en\">")
             .contains("<div data-compose-hydration-root=\"$COUNTER_ID\"><div class=\"card\"><output class=\"count\">0</output>")
             .contains(state("0"))
-            .contains("<script type=\"module\" src=\"/app.js\"></script>")
+            .contains("<script type=\"module\" src=\"/counter.js\"></script>")
     }
 
     @Test
@@ -47,7 +47,7 @@ class CounterApplicationTests(@Autowired private val mockMvc: MockMvc) {
 
     @Test
     fun browserBundleIsServed() {
-        this.mockMvc.get("/app.js").andExpect {
+        this.mockMvc.get("/counter.js").andExpect {
             status { isOk() }
         }
     }

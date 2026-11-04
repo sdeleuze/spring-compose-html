@@ -14,7 +14,7 @@ kotlin {
     wasmJs {
         browser {
             commonWebpackConfig {
-                outputFileName = "app.js"
+                outputFileName = "counter.js"
             }
         }
         binaries.executable()
@@ -30,7 +30,7 @@ kotlin {
     }
 }
 
-// Expose the browser bundle (app.js and Wasm binaries) so the server can serve it as static resources
+// Expose the browser bundle (counter.js and Wasm binaries) so the server can serve it as static resources
 val wasmJsBrowserDistribution = tasks.named("wasmJsBrowserDistribution")
 val browserDistribution = configurations.consumable("browserDistribution")
 artifacts {

@@ -42,7 +42,7 @@ fun ShopDocument(title: String, hydrate: Boolean = false, content: @Composable (
         Body {
             content()
             if (hydrate) {
-                Script(attrs = { type(ScriptType.Module); src("/app.js") })
+                Script(attrs = { type(ScriptType.Module); src("/islands.js") })
             }
         }
     }
