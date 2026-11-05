@@ -4,6 +4,9 @@ Experimental Spring MVC integration for the
 [Compose HTML EAP](https://github.com/JetBrains/compose-multiplatform/tree/master/html/eap):
 render typed `@Composable` functions as complete HTML documents with hydration islands.
 
+See the [Exploring Compose HTML for Server-Side Rendering](https://blog.jetbrains.com/kotlin/2026/08/exploring-compose-html-for-server-side-rendering/)
+blog post for more context about Compose HTML.
+
 ## Usage
 
 The library is not published yet: use it as a project dependency
