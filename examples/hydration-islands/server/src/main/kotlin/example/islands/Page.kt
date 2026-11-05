@@ -36,6 +36,11 @@ fun ShopDocument(title: String, hydrate: Boolean = false, content: @Composable (
                 attr("name", "viewport")
                 attr("content", "width=device-width, initial-scale=1")
             })
+            // Empty inline icon, so the browser does not request /favicon.ico
+            Link(attrs = {
+                attr("rel", "icon")
+                attr("href", "data:,")
+            })
             Title { Text("$title — Atelier Terre") }
             Style(PageStyles)
         }

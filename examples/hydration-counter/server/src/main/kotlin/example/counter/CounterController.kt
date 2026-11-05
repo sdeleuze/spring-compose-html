@@ -41,6 +41,11 @@ class CounterController {
                     attr("name", "viewport")
                     attr("content", "width=device-width, initial-scale=1")
                 })
+                // Empty inline icon, so the browser does not request /favicon.ico
+                Link(attrs = {
+                    attr("rel", "icon")
+                    attr("href", "data:,")
+                })
                 Title { Text("Counter") }
                 Style(CounterStyles)
             }
