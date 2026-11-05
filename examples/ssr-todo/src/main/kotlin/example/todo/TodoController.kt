@@ -35,13 +35,13 @@ class TodoController(private val repository: TodoRepository) {
 
     /** Render the page of [Filter.ALL], with the todo of ID `edit` in edit mode if any (`/?edit=1`). */
     @GetMapping("/")
-    fun all(@RequestParam edit: Long?): ComposeHtmlView = page(Filter.ALL, edit)
+    fun all(@RequestParam edit: Long?) = page(Filter.ALL, edit)
 
     @GetMapping("/active")
-    fun active(@RequestParam edit: Long?): ComposeHtmlView = page(Filter.ACTIVE, edit)
+    fun active(@RequestParam edit: Long?) = page(Filter.ACTIVE, edit)
 
     @GetMapping("/completed")
-    fun completed(@RequestParam edit: Long?): ComposeHtmlView = page(Filter.COMPLETED, edit)
+    fun completed(@RequestParam edit: Long?) = page(Filter.COMPLETED, edit)
 
     private fun page(filter: Filter, edit: Long?): ComposeHtmlView {
         val list = TodoList(repository.findAllByOrderByIdAsc(), filter, edit)

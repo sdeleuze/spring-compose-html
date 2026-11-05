@@ -33,7 +33,7 @@ class CounterController {
 
     /** Render the page on the server, with the initial count from the request, for example `/?count=5`. */
     @GetMapping("/")
-    fun page(@RequestParam count: Int?): ComposeHtmlView = composeDocument(key = "counter") {
+    fun page(@RequestParam count: Int?) = composeDocument(key = "counter") {
         Html(attrs = { lang("en") }) {
             Head {
                 Meta(attrs = { attr("charset", "utf-8") })
