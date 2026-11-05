@@ -149,14 +149,6 @@ Then open <http://localhost:8080/> or, for example,
 <http://localhost:8080/?glaze=SAGE&quantity=2&engraving=For%20Ada>, and the cart at
 <http://localhost:8080/cart>.
 
-To reload the page automatically on frontend changes, also run the Kotlin/Wasm development server
-in another terminal and open <http://localhost:8081/> instead: it serves the development bundle,
-with source maps for debugging, and proxies the other requests to Spring Boot.
-
-```shell
-./gradlew -t :examples:hydration-islands:frontend:wasmJsBrowserDevelopmentRun
-```
-
 ## Build
 
 ```shell
