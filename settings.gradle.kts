@@ -26,7 +26,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "spring-compose-html-build"
 
-include("spring-compose-html")
+include("spring-compose-html-webmvc")
+include("spring-compose-html-webflux")
 include("examples:hydration-counter:shared")
 include("examples:hydration-counter:frontend")
 include("examples:hydration-counter:server")

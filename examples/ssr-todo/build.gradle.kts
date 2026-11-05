@@ -25,7 +25,7 @@ kotlin {
 dependencies {
     implementation(platform(libs.spring.boot.dependencies))
     implementation(platform(libs.kotlin.bom))
-    implementation(project(":spring-compose-html"))
+    implementation(project(":spring-compose-html-webmvc"))
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

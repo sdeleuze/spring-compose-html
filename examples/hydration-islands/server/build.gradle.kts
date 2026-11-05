@@ -30,7 +30,7 @@ val browserDistributionFiles = configurations.resolvable("browserDistributionFil
 dependencies {
     implementation(platform(libs.spring.boot.dependencies))
     implementation(platform(libs.kotlin.bom))
-    implementation(project(":spring-compose-html"))
+    implementation(project(":spring-compose-html-webmvc"))
     implementation(project(":examples:hydration-islands:shared"))
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")

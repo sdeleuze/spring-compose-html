@@ -1,6 +1,6 @@
 # Spring Compose HTML
 
-Experimental Spring MVC integration for the
+Experimental Spring MVC and Spring WebFlux integrations for the
 [Compose HTML EAP](https://github.com/JetBrains/compose-multiplatform/tree/master/html/eap):
 render typed `@Composable` functions as complete HTML documents with hydration islands.
 
@@ -9,8 +9,11 @@ blog post for more context about Compose HTML.
 
 ## Usage
 
-The library is not published yet: use it as a project dependency
-(`implementation(project(":spring-compose-html"))`) as the example does, or as an included build.
+The libraries are not published yet: use them as a project dependency, as the examples do, or as an
+included build:
+
+- `spring-compose-html-webmvc` for Spring MVC (`implementation(project(":spring-compose-html-webmvc"))`)
+- `spring-compose-html-webflux` for Spring WebFlux (`implementation(project(":spring-compose-html-webflux"))`)
 
 The Compose compiler plugin (`org.jetbrains.kotlin.plugin.compose`) must be applied to the
 application, and the Compose HTML EAP artifacts come from the JetBrains development repository:
@@ -31,7 +34,9 @@ fun TodoItem(todo: Todo) {
 }
 ```
 
-Spring MVC controllers use `org.springframework.experimental.compose.servlet`:
+Spring MVC controllers use `org.springframework.experimental.compose.servlet`, Spring WebFlux ones
+`org.springframework.experimental.compose.webflux`, both providing the same `composeDocument` function
+returning a `View` of the related web stack:
 
 ```kotlin
 @Controller
@@ -69,7 +74,9 @@ sharing the same composables. See the [hydration islands example](#examples).
   `@ModelAttribute` handler parameters, a CSRF token as a `CsrfToken` parameter.
 - Each render runs in its own mutable snapshot that is discarded afterwards, so state written
   during server-side composition never leaks into the global snapshot or other requests.
-- Spring MVC views stream the output to the response writer.
+- Spring MVC views stream the output to the response writer, Spring WebFlux views render it into a
+  buffer written to the response once rendering completes. Spring WebFlux handlers can return the
+  view as is or wrapped in a `Mono`.
 
 ## Examples
 

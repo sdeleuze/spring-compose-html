@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package org.springframework.experimental.compose.servlet
+package org.springframework.experimental.compose.webflux
 
 import androidx.compose.runtime.Composable
-import org.springframework.experimental.compose.ComposeHtmlRenderer
 
 /**
  * Create a view that renders a complete HTML document.
@@ -34,4 +33,4 @@ public fun composeDocument(
     key: String? = null,
     validateStrictly: Boolean? = null,
     content: @Composable () -> Unit,
-): ComposeHtmlView = ComposeHtmlView(ComposeHtmlRenderer(key, validateStrictly, content))
+): ComposeHtmlView = ComposeHtmlView(key, validateStrictly, content)
