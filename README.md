@@ -229,4 +229,9 @@ For the hydration islands example, the size of the JS/Wasm assets transfered wit
 approximatively 180 KB with Gzip enabled (500 KB without) for the first page, then they are cached
 (same assets for all pages for now).
 
+The breakdown by package of the Wasm code size (function bodies only) is the following
+(generated with Binaryen argument `-g`):
+
+![Wasm code size breakdown](assets/wasm-analysis.svg)
+
 Reducing the size is theorically possible, but would require some work on the toolchain and library.
