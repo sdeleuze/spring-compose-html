@@ -224,6 +224,13 @@ with Spring Data JDBC.
 
 Then open <http://localhost:8080/>.
 
-## Notes
+## Performance
 
-- This is a prototype built on Compose HTML EAP artifacts with Kotlin 2.4, Spring Boot 4.2 and Spring Framework 7.1.
+The benchmark used measures with [JMH](https://github.com/openjdk/jmh) the rendering throughput
+of the TODO application page listing 10 todos, with `spring-compose-html-webmvc` with the optional
+Compose HTML lowering pluginagainst Thymeleaf and JMustache variants.
+
+![Rendering throughput](assets/benchmark.svg)
+
+Results with JDK 25.0.4 on an Apple M2 Pro, single thread, 2 forks of 5 warmup and 5 measurement
+iterations of 2 seconds, Compose HTML 0.0.2+dev8, Spring Boot 4.2.0-RC1, Thymeleaf 3.1.5 and JMustache 1.16.
