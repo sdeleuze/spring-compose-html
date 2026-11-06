@@ -21,7 +21,99 @@ blog post for more context about Compose HTML.
 
 ![Spring Compose HTML](assets/spring-compose-html.png)
 
-## Usage
+## Programming model
+
+### Shared component
+
+Components are plain composable functions with typed parameters, no view names, no template
+files, no `Map` model. Styles are typed too, declared in a `StyleSheet`:
+
+```kotlin
+@Composable
+fun Counter(initialCount: Int, onCountChange: (Int) -> Unit = {}) {
+    var count by remember(initialCount) { mutableStateOf(initialCount) }
+
+    Div(attrs = { classes(CounterStyles.card) }) {
+        Output { Text("$count") }
+        Button(attrs = {
+            type(ButtonType.Button)
+            onClick {
+                count++
+                onCountChange(count)
+            }
+        }) { Text("Increment") }
+    }
+}
+
+object CounterStyles : StyleSheet() {
+    val card by style {
+        display(DisplayStyle.Flex)
+        gap(24.px)
+        padding(48.px)
+    }
+}
+```
+
+### HTML page
+
+Spring MVC controllers use `org.springframework.experimental.compose.servlet`, Spring WebFlux ones
+`org.springframework.experimental.compose.webflux`, both providing the same `composeDocument` function
+returning a `ComposeHtmlView` for the related web stack. It renders a complete document: doctype,
+head, styles and optional hydration islands:
+
+```kotlin
+@Controller
+class CounterController {
+
+    @GetMapping("/")
+    fun page(@RequestParam count: Int?) = composeDocument {
+        Html(attrs = { lang("en") }) {
+            Head {
+                Title { Text("Counter") }
+                Style(CounterStyles)
+            }
+            Body {
+                H1 { Text("Counter") }
+                Counter(count ?: 0)
+            }
+        }
+    }
+}
+```
+
+Without hydration, the page is plain server-rendered HTML: the button is displayed but does
+nothing, since no JavaScript or Wasm is involved.
+
+### Optional client-side hydration
+
+To make a component interactive, wrap it in a `HydrationRoot` on the server. It renders the
+component as an island along with its public initial state, serialized here with `Int::toString`:
+
+```kotlin
+Body {
+    H1 { Text("Counter") }
+    HydrationRoot(count ?: 0, Int::toString, hydrationId = "counter") {
+        Counter(it)
+    }
+    Script(attrs = { type(ScriptType.Module); src("/counter.js") })
+}
+```
+
+The browser entry point, compiled to Kotlin/Wasm (or Kotlin/JS), hydrates the island with
+`hydrateRoot`: it deserializes the initial state and reuses the server-rendered DOM, attaching the
+event handlers instead of rendering it again. The rest of the page stays static HTML:
+
+```kotlin
+fun main() {
+    hydrateRoot(String::toInt, hydrationId = "counter") {
+        Counter(it) { count -> window.history.replaceState(null, "", "?count=$count") }
+    }
+}
+```
+
+See the [hydration counter](#hydration-counter) and [hydration islands](#hydration-islands) examples.
+
+## Build and dependencies
 
 The libraries are not published yet: install them in your local Maven repository with:
 
@@ -52,43 +144,17 @@ dependencies {
 The Compose HTML lowering plugin (`org.jetbrains.compose.html.lowering`) can optionally be applied
 for faster rendering.
 
-Components are plain composable functions with typed parameters, no view names, no template
-files, no `Map` model:
+With hydration, the project is typically split in three Gradle modules, as in the
+[hydration counter](#hydration-counter) example:
 
-```kotlin
-@Composable
-fun TodoItem(todo: Todo) {
-    Li(attrs = { id("todo-${todo.id}") }) { Text(todo.title) }
-}
-```
-
-Spring MVC controllers use `org.springframework.experimental.compose.servlet`, Spring WebFlux ones
-`org.springframework.experimental.compose.webflux`, both providing the same `composeDocument` function
-returning a `ComposeHtmlView` for the related web stack:
-
-```kotlin
-@Controller
-class TodoController(private val repository: TodoRepository) {
-
-    // Complete document: doctype, head, styles and optional hydration islands
-    @GetMapping("/todos")
-    fun page(): View {
-        val todos = repository.findAll()
-        return composeDocument {
-            Html {
-                Head { Title { Text("Todos") } }
-                Body { todos.forEach { TodoItem(it) } }
-            }
-        }
-    }
-}
-```
-
-### Hydration
-
-Within `composeDocument`, `HydrationRoot` renders an island and its public initial state. The
-browser hydrates the islands with `hydrateRoot`, from a Kotlin/Wasm (or Kotlin/JS) bundle
-sharing the same composables. See the [hydration counter](#hydration-counter) and [hydration islands](#hydration-islands) examples.
+- `shared`: Kotlin Multiplatform library with `jvm` and `wasmJs` targets, the Compose compiler
+  plugin and the `androidx.compose.runtime:runtime`, `org.jetbrains.compose.html.eap:html-core-eap`
+  and `org.jetbrains.compose.html:kotlinx-browser-common-subset` dependencies, containing the
+  components.
+- `frontend`: Kotlin/Wasm browser application depending on `shared`, whose `main()` calls
+  `hydrateRoot`, packaged as a JavaScript bundle with `wasmJsBrowserDistribution`.
+- `server`: Spring Boot application depending on `shared` and `spring-compose-html-webmvc` (or
+  `-webflux`), serving the frontend bundle as static resources.
 
 ## Examples
 
