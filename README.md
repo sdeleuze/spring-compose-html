@@ -1,19 +1,20 @@
-# Spring Compose HTML
+# Spring integration for Compose HTML 
 
 Experimental Spring MVC and Spring WebFlux integrations for the
-[Compose HTML EAP](https://github.com/JetBrains/compose-multiplatform/tree/master/html/eap):
-render typed `@Composable` functions as complete HTML documents, with optional client-side [hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)).
+[Compose HTML Early Access Preview](https://github.com/JetBrains/compose-multiplatform/tree/master/html/eap).
+It renders typed `@Composable` functions as HTML or CSS documents on server-side with Kotlin/JVM, with optional
+client-side [hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)) with Kotlin/Wasm (or Kotlin/JS).
 
 Compose HTML reuses the programming model that millions of Android developers use to build mobile
 UIs with [Jetpack Compose](https://developer.android.com/compose), applied to HTML and CSS to build
-websites and web applications. Rendering pages on the server and hydrating only the interactive
-parts in the browser shares some principles with the
+websites and web applications with Kotlin DSLs. Rendering pages on the server and hydrating only the
+interactive parts in the browser shares some principles with the
 [Astro Islands architecture](https://docs.astro.build/en/concepts/islands/) or
 [Next.js Server-Side Rendering](https://nextjs.org/docs/pages/building-your-application/rendering/server-side-rendering).
 
 For Spring developers, it is an alternative to traditional templating engines like
 [Thymeleaf](https://www.thymeleaf.org/), [FreeMarker](https://freemarker.apache.org/index.html) or
-[JMustache](https://github.com/samskivert/jmustache), or to full-stack UI frameworks like
+[JMustache](https://github.com/samskivert/jmustache), but also to full-stack UI frameworks like
 [Vaadin](https://vaadin.com/).
 
 See the [Exploring Compose HTML for Server-Side Rendering](https://blog.jetbrains.com/kotlin/2026/08/exploring-compose-html-for-server-side-rendering/)
@@ -56,10 +57,8 @@ object CounterStyles : StyleSheet() {
 
 ### HTML page
 
-Spring MVC controllers use `org.springframework.experimental.compose.servlet`, Spring WebFlux ones
-`org.springframework.experimental.compose.webflux`, both providing the same `composeDocument` function
-returning a `ComposeHtmlView` for the related web stack. It renders a complete document: doctype,
-head, styles and optional hydration islands:
+A `composeDocument` function returning a `ComposeHtmlView` is provided for either WebMvc or WebFlux.
+It renders a complete HTML document: doctype, head, styles and optional hydration islands:
 
 ```kotlin
 @Controller
@@ -144,8 +143,7 @@ dependencies {
 The Compose HTML lowering plugin (`org.jetbrains.compose.html.lowering`) can optionally be applied
 for faster rendering.
 
-With hydration, the project is typically split in three Gradle modules, as in the
-[hydration counter](#hydration-counter) example:
+With hydration, the project is typically split in three Gradle modules:
 
 - `shared`: Kotlin Multiplatform library with `jvm` and `wasmJs` targets, the Compose compiler
   plugin and the `androidx.compose.runtime:runtime`, `org.jetbrains.compose.html.eap:html-core-eap`
@@ -163,13 +161,6 @@ With hydration, the project is typically split in three Gradle modules, as in th
 [`examples/hydration-counter`](examples/hydration-counter) is the most basic hydration example: a page with
 a counter rendered on the server, and a button incrementing it once the browser has hydrated it.
 
-- `shared`: Kotlin Multiplatform library (JVM and Wasm) with the `Counter` composable, used by both
-  the server and the frontend.
-- `frontend`: Kotlin/Wasm browser application whose entry point hydrates the counter, packaged as
-  the `counter.js` bundle.
-- `server`: Spring Boot application rendering the page, with the counter wrapped in a
-  `HydrationRoot` carrying its initial count, and serving the frontend bundle as static resources.
-
 ```shell
 ./gradlew :examples:hydration-counter:server:bootRun
 ```
@@ -182,31 +173,11 @@ from another count.
 A mostly static product page for a handmade mug, with three interactive islands to choose the
 glaze, the quantity and an engraving, and a cart page.
 
-The islands sit inside a plain HTML form and expose their state as hidden inputs: "Add to cart"
-posts the configured mug to the server, which stores it in a session-scoped cart and redirects to
-the cart page. The cart page renders one quantity island per cart line, each with its own
-hydration ID: the stepper updates the line price in the browser, "Update" posts the new quantity
-so the server recomputes the totals.
-
-Both pages share a single browser bundle whose `main()` hydrates only the islands present in the
-current page: the fixed product page islands when found, and the cart line islands discovered
-from their hydration ID prefix.
-
-- `shared`: Kotlin Multiplatform library (JVM and Wasm) with the island composables and styles,
-  used by both the server and the frontend so the browser hydrates exactly what the server rendered.
-- `frontend`: Kotlin/Wasm browser application whose entry point hydrates the islands of any
-  page, packaged as the `islands.js` bundle.
-- `server`: Spring Boot application rendering the pages with `@Controller`s and serving the
-  frontend bundle as static resources. Pages and bundle are gzip-compressed (`server.compression` in
-  `application.properties`). The initial state of the islands comes from typed request parameters.
-
 ```shell
 ./gradlew :examples:hydration-islands:server:bootRun
 ```
 
-Then open <http://localhost:8080/> or, for example,
-<http://localhost:8080/?glaze=SAGE&quantity=2&engraving=For%20Ada>, and the cart at
-<http://localhost:8080/cart>.
+Then open <http://localhost:8080/> or, for example, <http://localhost:8080/?glaze=SAGE&quantity=2&engraving=For%20Ada>.
 
 ### Server-Side Rendering TODO application
 
@@ -214,9 +185,7 @@ Then open <http://localhost:8080/> or, for example,
 without any JavaScript or Wasm.
 
 Every action is a plain HTML form posted to a `@Controller` that redirects back to the page it was
-submitted from (Post/Redirect/Get). Clicking a todo renders the same page with this todo in edit
-mode (`/?edit=1`), saving it empty deletes it. The todos are stored in an in-memory H2 database
-with Spring Data JDBC.
+submitted from.
 
 ```shell
 ./gradlew :examples:ssr-todo:bootRun
@@ -224,13 +193,22 @@ with Spring Data JDBC.
 
 Then open <http://localhost:8080/>.
 
-## Performance
+## Data points
+
+Those data points have been measured with Compose HTML 0.0.2+dev8.
+
+### Performance
 
 The benchmark used measures with [JMH](https://github.com/openjdk/jmh) the rendering throughput
 of the TODO application page listing 10 todos, with `spring-compose-html-webmvc` with the optional
-Compose HTML lowering pluginagainst Thymeleaf and JMustache variants.
+Compose HTML lowering plugin, against Thymeleaf 3.1.5 and JMustache 1.16 variants.
 
 ![Rendering throughput](assets/benchmark.svg)
 
-Results with JDK 25.0.4 on an Apple M2 Pro, single thread, 2 forks of 5 warmup and 5 measurement
-iterations of 2 seconds, Compose HTML 0.0.2+dev8, Spring Boot 4.2.0-RC1, Thymeleaf 3.1.5 and JMustache 1.16.
+### Static assets size
+
+For the hydration islands example, the size of the JS/Wasm assets transfered with GZIP enabled are
+approximatively 180 KB with Gzip enabled (500 KB without) for the first page, then they are cached
+(same assets for all pages for now).
+
+Reducing the size is theorically possible, but would require some work on the toolchain and library.
