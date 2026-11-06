@@ -9,20 +9,34 @@ blog post for more context about Compose HTML.
 
 ## Usage
 
-The libraries are not published yet: use them as a project dependency, as the examples do, or as an
-included build:
+The libraries are not published yet: install them in your local Maven repository with:
 
-- `spring-compose-html-webmvc` for Spring MVC (`implementation(project(":spring-compose-html-webmvc"))`)
-- `spring-compose-html-webflux` for Spring WebFlux (`implementation(project(":spring-compose-html-webflux"))`)
+```shell
+./gradlew publishToMavenLocal
+```
+
+Then add the dependency matching your web stack:
+
+- `org.springframework.experimental:spring-compose-html-webmvc` for Spring MVC
+- `org.springframework.experimental:spring-compose-html-webflux` for Spring WebFlux
 
 The Compose compiler plugin (`org.jetbrains.kotlin.plugin.compose`) must be applied to the
 application, and the Compose HTML EAP artifacts come from the JetBrains development repository:
 
 ```kotlin
 repositories {
+    mavenLocal()
+    mavenCentral()
     maven("https://packages.jetbrains.team/maven/p/cmp/dev")
 }
+
+dependencies {
+    implementation("org.springframework.experimental:spring-compose-html-webmvc:0.1.0-SNAPSHOT")
+}
 ```
+
+The Compose HTML lowering plugin (`org.jetbrains.compose.html.lowering`) can optionally be applied
+for faster rendering.
 
 Components are plain composable functions with typed parameters, no view names, no template
 files, no `Map` model:
