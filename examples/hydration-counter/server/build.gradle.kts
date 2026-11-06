@@ -29,11 +29,13 @@ val browserDistributionFiles = configurations.resolvable("browserDistributionFil
 
 dependencies {
     implementation(platform(libs.spring.boot.dependencies))
+    developmentOnly(platform(libs.spring.boot.dependencies))
     implementation(platform(libs.kotlin.bom))
     implementation(project(":spring-compose-html-webmvc"))
     implementation(project(":examples:hydration-counter:shared"))
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     browserDistribution.name(project(path = ":examples:hydration-counter:frontend", configuration = "browserDistribution"))
 
@@ -45,6 +47,16 @@ tasks.processResources {
     from(browserDistributionFiles) {
         into("static")
     }
+}
+
+// Run the application with the shared module classes directories (resolved for compilation, thanks to
+// kotlin.jvm.addClassesVariant=true in gradle.properties) rather than its jar, so that Spring Boot devtools
+// restarts it when they are updated
+tasks.bootRun {
+    val isShared = { id: ComponentIdentifier -> id is ProjectComponentIdentifier && id.projectPath == ":examples:hydration-counter:shared" }
+    classpath = sourceSets.main.get().output +
+        configurations.compileClasspath.get().incoming.artifactView { componentFilter(isShared) }.files +
+        configurations.runtimeClasspath.get().incoming.artifactView { componentFilter { !isShared(it) } }.files
 }
 
 tasks.test {

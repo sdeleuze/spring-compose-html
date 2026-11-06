@@ -29,7 +29,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
     runtimeOnly("com.h2database:h2")
+
+    developmentOnly(platform(libs.spring.boot.dependencies))
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

@@ -168,6 +168,15 @@ a counter rendered on the server, and a button incrementing it once the browser 
 Then open <http://localhost:8080/> or, for example, <http://localhost:8080/?count=5> to start
 from another count.
 
+To rebuild the application while it is running, run in another terminal:
+
+```shell
+./gradlew -t :examples:hydration-counter:shared:compileKotlinJvm :examples:hydration-counter:server:processResources
+```
+
+Spring Boot devtools restarts the server when `shared` classes are updated, and the updated frontend
+bundle is served after a browser reload.
+
 ### Hydration islands
 
 A mostly static product page for a handmade mug, with three interactive islands to choose the
@@ -178,6 +187,15 @@ glaze, the quantity and an engraving, and a cart page.
 ```
 
 Then open <http://localhost:8080/> or, for example, <http://localhost:8080/?glaze=SAGE&quantity=2&engraving=For%20Ada>.
+
+To rebuild the application while it is running, run in another terminal:
+
+```shell
+./gradlew -t :examples:hydration-islands:shared:compileKotlinJvm :examples:hydration-islands:server:processResources
+```
+
+Spring Boot devtools restarts the server when `shared` classes are updated, and the updated frontend
+bundle is served after a browser reload.
 
 ### Server-Side Rendering TODO application
 
