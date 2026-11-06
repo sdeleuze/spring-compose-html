@@ -200,8 +200,8 @@ Those data points have been measured with Compose HTML 0.0.2+dev8.
 ### Performance
 
 The benchmark used measures with [JMH](https://github.com/openjdk/jmh) the rendering throughput
-of the TODO application page listing 10 todos, with `spring-compose-html-webmvc` with the optional
-Compose HTML lowering plugin, against Thymeleaf 3.1.5 and JMustache 1.16 variants.
+of the TODO application page listing 10 todos, with `spring-compose-html-webmvc`, against
+Thymeleaf 3.1.5 and JMustache 1.16 variants.
 
 ![Rendering throughput](assets/benchmark.svg)
 
