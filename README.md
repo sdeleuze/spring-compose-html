@@ -2,10 +2,24 @@
 
 Experimental Spring MVC and Spring WebFlux integrations for the
 [Compose HTML EAP](https://github.com/JetBrains/compose-multiplatform/tree/master/html/eap):
-render typed `@Composable` functions as complete HTML documents with hydration islands.
+render typed `@Composable` functions as complete HTML documents, with optional client-side [hydration](https://en.wikipedia.org/wiki/Hydration_(web_development)).
+
+Compose HTML reuses the programming model that millions of Android developers use to build mobile
+UIs with [Jetpack Compose](https://developer.android.com/compose), applied to HTML and CSS to build
+websites and web applications. Rendering pages on the server and hydrating only the interactive
+parts in the browser shares some principles with the
+[Astro Islands architecture](https://docs.astro.build/en/concepts/islands/) or
+[Next.js Server-Side Rendering](https://nextjs.org/docs/pages/building-your-application/rendering/server-side-rendering).
+
+For Spring developers, it is an alternative to traditional templating engines like
+[Thymeleaf](https://www.thymeleaf.org/), [FreeMarker](https://freemarker.apache.org/index.html) or
+[JMustache](https://github.com/samskivert/jmustache), or to full-stack UI frameworks like
+[Vaadin](https://vaadin.com/).
 
 See the [Exploring Compose HTML for Server-Side Rendering](https://blog.jetbrains.com/kotlin/2026/08/exploring-compose-html-for-server-side-rendering/)
 blog post for more context about Compose HTML.
+
+![Spring Compose HTML](assets/spring-compose-html.png)
 
 ## Usage
 
@@ -50,7 +64,7 @@ fun TodoItem(todo: Todo) {
 
 Spring MVC controllers use `org.springframework.experimental.compose.servlet`, Spring WebFlux ones
 `org.springframework.experimental.compose.webflux`, both providing the same `composeDocument` function
-returning a `View` of the related web stack:
+returning a `ComposeHtmlView` for the related web stack:
 
 ```kotlin
 @Controller
@@ -70,31 +84,15 @@ class TodoController(private val repository: TodoRepository) {
 }
 ```
 
-### Hydration islands
+### Hydration
 
 Within `composeDocument`, `HydrationRoot` renders an island and its public initial state. The
 browser hydrates the islands with `hydrateRoot`, from a Kotlin/Wasm (or Kotlin/JS) bundle
-sharing the same composables. See the [hydration islands example](#examples).
-
-### Details
-
-- `key`: optional stable key per page (`composeDocument(key = "home") { ... }`)
-  enabling best-effort reuse of Compose HTML rendering storage across requests.
-- `validateStrictly`: overrides the Compose HTML validation mode, which defaults to fast
-  validation, or strict with the `COMPOSE_HTML_VALIDATE_STRICTLY=true` environment variable.
-- The Spring model is not used: content gets its data from what it captures, typically typed
-  handler parameters and local variables. Attributes contributed outside the handler, like
-  `@ModelAttribute` methods (including in `@ControllerAdvice`), can be injected as
-  `@ModelAttribute` handler parameters, a CSRF token as a `CsrfToken` parameter.
-- Each render runs in its own mutable snapshot that is discarded afterwards, so state written
-  during server-side composition never leaks into the global snapshot or other requests.
-- Spring MVC views stream the output to the response writer, Spring WebFlux views render it into a
-  buffer written to the response once rendering completes. Spring WebFlux handlers can return the
-  view as is or wrapped in a `Mono`.
+sharing the same composables. See the [hydration counter](#hydration-counter) and [hydration islands](#hydration-islands) examples.
 
 ## Examples
 
-### Counter
+### Hydration counter
 
 [`examples/hydration-counter`](examples/hydration-counter) is the most basic hydration example: a page with
 a counter rendered on the server, and a button incrementing it once the browser has hydrated it.
@@ -113,28 +111,9 @@ a counter rendered on the server, and a button incrementing it once the browser 
 Then open <http://localhost:8080/> or, for example, <http://localhost:8080/?count=5> to start
 from another count.
 
-### TODO application
-
-[`examples/ssr-todo`](examples/ssr-todo) is a typical TODO application, fully rendered on the server
-without any JavaScript: add, edit, complete and delete todos, mark them all as completed, filter the
-active or completed ones and clear the completed ones.
-
-Every action is a plain HTML form posted to a `@Controller` that redirects back to the page it was
-submitted from (Post/Redirect/Get). Clicking a todo renders the same page with this todo in edit
-mode (`/?edit=1`), saving it empty deletes it. The todos are stored in an in-memory H2 database
-with Spring Data JDBC.
-
-```shell
-./gradlew :examples:ssr-todo:bootRun
-```
-
-Then open <http://localhost:8080/>.
-
 ### Hydration islands
 
-[`examples/hydration-islands`](examples/hydration-islands) is the Spring version of the
-[Compose HTML EAP hydration islands example](https://github.com/JetBrains/compose-multiplatform/tree/master/html/eap/examples/hydration-islands):
-a mostly static product page for a handmade mug, with three interactive islands to choose the
+A mostly static product page for a handmade mug, with three interactive islands to choose the
 glaze, the quantity and an engraving, and a cart page.
 
 The islands sit inside a plain HTML form and expose their state as hidden inputs: "Add to cart"
@@ -163,13 +142,21 @@ Then open <http://localhost:8080/> or, for example,
 <http://localhost:8080/?glaze=SAGE&quantity=2&engraving=For%20Ada>, and the cart at
 <http://localhost:8080/cart>.
 
-## Build
+### Server-Side Rendering TODO application
+
+[`examples/ssr-todo`](examples/ssr-todo) is a typical TODO application, fully rendered on the server
+without any JavaScript or Wasm.
+
+Every action is a plain HTML form posted to a `@Controller` that redirects back to the page it was
+submitted from (Post/Redirect/Get). Clicking a todo renders the same page with this todo in edit
+mode (`/?edit=1`), saving it empty deletes it. The todos are stored in an in-memory H2 database
+with Spring Data JDBC.
 
 ```shell
-./gradlew build
+./gradlew :examples:ssr-todo:bootRun
 ```
 
-Requires JDK 25 to build the example (the library itself targets Java 17), which runs on virtual threads.
+Then open <http://localhost:8080/>.
 
 ## Notes
 
