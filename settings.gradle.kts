@@ -24,7 +24,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "spring-compose-html-build"
+rootProject.name = "spring-compose-html"
 
 include("spring-compose-html-webmvc")
 include("spring-compose-html-webflux")
