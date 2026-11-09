@@ -112,6 +112,48 @@ fun main() {
 
 See the [hydration counter](#hydration-counter) and [hydration islands](#hydration-islands) examples.
 
+### Usage from Java
+
+Composable functions and lambdas can only be written in Kotlin, but the rest of the Spring
+application (controllers, services, repositories, tests) can be written in Java. Java and Kotlin
+sources live side by side in the same Gradle module with the Kotlin JVM and Compose compiler plugins
+applied, Java sources in `src/main/java` and Kotlin sources in `src/main/kotlin`.
+
+The Kotlin side exposes a regular function returning a Spring MVC `View`, with a `@file:JvmName`
+annotation to give it a Java-friendly class name:
+
+```kotlin
+@file:JvmName("CounterPage")
+
+fun counterView(count: Int): View = composeDocument {
+    Html(attrs = { lang("en") }) {
+        Head {
+            Title { Text("Counter") }
+            Style(CounterStyles)
+        }
+        Body {
+            H1 { Text("Counter") }
+            Counter(count)
+        }
+    }
+}
+```
+
+The Java controller calls it with the typed parameters of the page:
+
+```java
+@Controller
+public class CounterController {
+
+	@GetMapping("/")
+	public View page(@RequestParam @Nullable Integer count) {
+		return CounterPage.counterView(count != null ? count : 0);
+	}
+}
+```
+
+See the [`examples/ssr-todo-java`](examples/ssr-todo-java) example for a complete Java application.
+
 ## Build and dependencies
 
 The libraries are not published yet: install them in your local Maven repository with:
