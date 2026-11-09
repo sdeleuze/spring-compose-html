@@ -14,7 +14,7 @@ interactive parts in the browser shares some principles with the
 
 For Spring developers, it is an alternative to traditional templating engines like
 [Thymeleaf](https://www.thymeleaf.org/), [FreeMarker](https://freemarker.apache.org/index.html) or
-[JMustache](https://github.com/samskivert/jmustache), but also to full-stack UI frameworks like
+[JMustache](https://github.com/samskivert/jmustache), but also to fullstack UI frameworks like
 [Vaadin](https://vaadin.com/).
 
 See the [Exploring Compose HTML for Server-Side Rendering](https://blog.jetbrains.com/kotlin/2026/08/exploring-compose-html-for-server-side-rendering/)
