@@ -227,7 +227,8 @@ Thymeleaf 3.1.5 and JMustache 1.16 variants.
 
 For the hydration islands example, the size of the JS/Wasm assets transfered with GZIP enabled are
 approximatively 180 KB with Gzip enabled (500 KB without) for the first page, then they are cached
-(same assets for all pages for now).
+(same assets for all pages for now). Approximately 86% is insfrastructure (Compose, Kotlin stdlib)
+and 14% is specific to this website.
 
 The breakdown by package of the Wasm code size (function bodies only) is the following
 (generated with Binaryen argument `-g`):
